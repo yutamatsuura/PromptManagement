@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptManagement - ハイコントラストデザインテーマセレクター</title>
+  <style>
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       グローバルスタイル
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       タブナビゲーション
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tab-navigation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 20px 0 0 0;
+    }
+
+    .tab-button {
+      flex: 1;
+      max-width: 300px;
+      padding: 16px 32px;
+      background: transparent;
+      color: #888;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .tab-button:hover::before {
+      left: 100%;
+    }
+
+    .tab-button:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #000;
+      border-bottom: 3px solid #FF8C00;
+      font-weight: 700;
+    }
+
+    .theme-label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       テーマコンテナ
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .theme-container {
+      display: none;
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .theme-container.active {
+      display: block;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 1: クラシックハイコントラスト
+       - 白背景 + 黒テキスト + 黄色アクセント
+       - 太い境界線、角ばったデザイン
+       - 大文字変換と広い文字間隔
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #theme1 {
+      background: #FFFFFF;
+      color: #000000;
+      font-weight: 600;
+    }
+
+    #theme1 .app-header {
+      background: #000000;
+      color: #FFFFFF;
+      padding: 32px 40px;
+      border-bottom: 5px solid #FFD700;
+    }
+
+    #theme1 .app-title {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      border-left: 8px solid #FFD700;
+      padding-left: 20px;
+    }
+
+    #theme1 .app-subtitle {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+
+    #theme1 .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    #theme1 .search-section {
+      background: #F5F5F5;
+      border: 4px solid #000000;
+      border-radius: 0;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    #theme1 .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 4px solid #FFD700;
+      padding-bottom: 12px;
+    }
+
+    #theme1 .search-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border: 4px solid #000000;
+      border-radius: 0;
+      background: #FFFFFF;
+      color: #000000;
+      margin-bottom: 20px;
+    }
+
+    #theme1 .search-input::placeholder {
+      color: #666666;
+      font-weight: 600;
+    }
+
+    #theme1 .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    #theme1 .tag-chip {
+      padding: 12px 20px;
+      background: #FFFFFF;
+      color: #000000;
+      border: 3px solid #000000;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme1 .tag-chip:hover,
+    #theme1 .tag-chip.active {
+      background: #FFD700;
+      border-color: #000000;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 #000000;
+    }
+
+    #theme1 .favorite-toggle {
+      padding: 16px 28px;
+      background: #FFFFFF;
+      color: #000000;
+      border: 4px solid #000000;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme1 .favorite-toggle:hover,
+    #theme1 .favorite-toggle.active {
+      background: #FFD700;
+      transform: scale(1.05);
+    }
+
+    #theme1 .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #theme1 .prompt-item {
+      background: #FFFFFF;
+      border: 4px solid #000000;
+      border-radius: 0;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    #theme1 .prompt-item:hover {
+      border-color: #FFD700;
+      box-shadow: 0 8px 0 #FFD700;
+      transform: translateY(-4px);
+    }
+
+    #theme1 .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    #theme1 .prompt-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    #theme1 .favorite-badge {
+      background: #FFD700;
+      color: #000000;
+      padding: 8px 16px;
+      border: 3px solid #000000;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    #theme1 .prompt-description {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #333333;
+      font-weight: 600;
+    }
+
+    #theme1 .prompt-content {
+      background: #F5F5F5;
+      border: 3px solid #000000;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      max-height: 120px;
+      overflow-y: auto;
+      color: #000000;
+      font-weight: 600;
+    }
+
+    #theme1 .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    #theme1 .tag {
+      background: #000000;
+      color: #FFD700;
+      padding: 6px 14px;
+      border: 3px solid #FFD700;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    #theme1 .prompt-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    #theme1 .action-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border: 3px solid #000000;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme1 .copy-btn {
+      background: #FFD700;
+      color: #000000;
+    }
+
+    #theme1 .copy-btn:hover {
+      background: #FFA500;
+      transform: scale(1.05);
+    }
+
+    #theme1 .copy-btn.copied {
+      background: #32CD32;
+      color: #FFFFFF;
+    }
+
+    #theme1 .edit-btn {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    #theme1 .edit-btn:hover {
+      background: #E0E0E0;
+    }
+
+    #theme1 .delete-btn {
+      background: #FFFFFF;
+      color: #DC143C;
+      border-color: #DC143C;
+    }
+
+    #theme1 .delete-btn:hover {
+      background: #DC143C;
+      color: #FFFFFF;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 2: ダークハイコントラスト
+       - 黒背景 + 白テキスト + オレンジアクセント
+       - 太い境界線、シャープなエッジ
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #theme2 {
+      background: #000000;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    #theme2 .app-header {
+      background: #0A0A0A;
+      color: #FFFFFF;
+      padding: 32px 40px;
+      border-bottom: 5px solid #FF6600;
+    }
+
+    #theme2 .app-title {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-left: 8px solid #FF6600;
+      padding-left: 20px;
+    }
+
+    #theme2 .app-subtitle {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      color: #CCCCCC;
+    }
+
+    #theme2 .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    #theme2 .search-section {
+      background: #0A0A0A;
+      border: 4px solid #FFFFFF;
+      border-radius: 0;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    #theme2 .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 4px solid #FF6600;
+      padding-bottom: 12px;
+      color: #FFFFFF;
+    }
+
+    #theme2 .search-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border: 4px solid #FFFFFF;
+      border-radius: 0;
+      background: #1A1A1A;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+    }
+
+    #theme2 .search-input::placeholder {
+      color: #888888;
+      font-weight: 600;
+    }
+
+    #theme2 .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    #theme2 .tag-chip {
+      padding: 12px 20px;
+      background: #1A1A1A;
+      color: #FFFFFF;
+      border: 3px solid #FFFFFF;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme2 .tag-chip:hover,
+    #theme2 .tag-chip.active {
+      background: #FF6600;
+      border-color: #FF6600;
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 #FF6600;
+    }
+
+    #theme2 .favorite-toggle {
+      padding: 16px 28px;
+      background: #1A1A1A;
+      color: #FFFFFF;
+      border: 4px solid #FFFFFF;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme2 .favorite-toggle:hover,
+    #theme2 .favorite-toggle.active {
+      background: #FF6600;
+      border-color: #FF6600;
+      transform: scale(1.05);
+    }
+
+    #theme2 .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #theme2 .prompt-item {
+      background: #0A0A0A;
+      border: 4px solid #FFFFFF;
+      border-radius: 0;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    #theme2 .prompt-item:hover {
+      border-color: #FF6600;
+      box-shadow: 0 8px 0 #FF6600;
+      transform: translateY(-4px);
+    }
+
+    #theme2 .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    #theme2 .prompt-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      flex: 1;
+      color: #FFFFFF;
+    }
+
+    #theme2 .favorite-badge {
+      background: #FF6600;
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border: 3px solid #FFFFFF;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    #theme2 .prompt-description {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #CCCCCC;
+      font-weight: 500;
+    }
+
+    #theme2 .prompt-content {
+      background: #1A1A1A;
+      border: 3px solid #FFFFFF;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      max-height: 120px;
+      overflow-y: auto;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    #theme2 .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    #theme2 .tag {
+      background: #FFFFFF;
+      color: #000000;
+      padding: 6px 14px;
+      border: 3px solid #FF6600;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    #theme2 .prompt-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    #theme2 .action-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border: 3px solid #FFFFFF;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme2 .copy-btn {
+      background: #FF6600;
+      color: #FFFFFF;
+      border-color: #FF6600;
+    }
+
+    #theme2 .copy-btn:hover {
+      background: #FF8C00;
+      border-color: #FF8C00;
+      transform: scale(1.05);
+    }
+
+    #theme2 .copy-btn.copied {
+      background: #00FF00;
+      color: #000000;
+      border-color: #00FF00;
+    }
+
+    #theme2 .edit-btn {
+      background: #1A1A1A;
+      color: #FFFFFF;
+    }
+
+    #theme2 .edit-btn:hover {
+      background: #333333;
+    }
+
+    #theme2 .delete-btn {
+      background: #1A1A1A;
+      color: #FF0000;
+      border-color: #FF0000;
+    }
+
+    #theme2 .delete-btn:hover {
+      background: #FF0000;
+      color: #FFFFFF;
+      border-color: #FF0000;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 3: ブルーハイコントラスト
+       - 濃紺背景 + 白テキスト + 明るい水色アクセント
+       - クリアな視認性と落ち着いた雰囲気
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #theme3 {
+      background: #001529;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    #theme3 .app-header {
+      background: #000B14;
+      color: #FFFFFF;
+      padding: 32px 40px;
+      border-bottom: 5px solid #00D9FF;
+    }
+
+    #theme3 .app-title {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-left: 8px solid #00D9FF;
+      padding-left: 20px;
+    }
+
+    #theme3 .app-subtitle {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      color: #B3E5FC;
+    }
+
+    #theme3 .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    #theme3 .search-section {
+      background: #002140;
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    #theme3 .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 4px solid #00D9FF;
+      padding-bottom: 12px;
+      color: #FFFFFF;
+    }
+
+    #theme3 .search-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      background: #003A5C;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+    }
+
+    #theme3 .search-input::placeholder {
+      color: #81C784;
+      font-weight: 600;
+    }
+
+    #theme3 .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    #theme3 .tag-chip {
+      padding: 12px 20px;
+      background: #003A5C;
+      color: #FFFFFF;
+      border: 3px solid #FFFFFF;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme3 .tag-chip:hover,
+    #theme3 .tag-chip.active {
+      background: #00D9FF;
+      border-color: #00D9FF;
+      color: #001529;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 217, 255, 0.5);
+    }
+
+    #theme3 .favorite-toggle {
+      padding: 16px 28px;
+      background: #003A5C;
+      color: #FFFFFF;
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme3 .favorite-toggle:hover,
+    #theme3 .favorite-toggle.active {
+      background: #00D9FF;
+      border-color: #00D9FF;
+      color: #001529;
+      transform: scale(1.05);
+    }
+
+    #theme3 .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #theme3 .prompt-item {
+      background: #002140;
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    #theme3 .prompt-item:hover {
+      border-color: #00D9FF;
+      box-shadow: 0 8px 16px rgba(0, 217, 255, 0.3);
+      transform: translateY(-4px);
+    }
+
+    #theme3 .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    #theme3 .prompt-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      flex: 1;
+      color: #FFFFFF;
+    }
+
+    #theme3 .favorite-badge {
+      background: #00D9FF;
+      color: #001529;
+      padding: 8px 16px;
+      border: 3px solid #FFFFFF;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    #theme3 .prompt-description {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #B3E5FC;
+      font-weight: 500;
+    }
+
+    #theme3 .prompt-content {
+      background: #003A5C;
+      border: 3px solid #FFFFFF;
+      border-radius: 4px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      max-height: 120px;
+      overflow-y: auto;
+      color: #E1F5FE;
+      font-weight: 500;
+    }
+
+    #theme3 .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    #theme3 .tag {
+      background: #FFFFFF;
+      color: #001529;
+      padding: 6px 14px;
+      border: 3px solid #00D9FF;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    #theme3 .prompt-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    #theme3 .action-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border: 3px solid #FFFFFF;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #theme3 .copy-btn {
+      background: #00D9FF;
+      color: #001529;
+      border-color: #00D9FF;
+    }
+
+    #theme3 .copy-btn:hover {
+      background: #00BFFF;
+      border-color: #00BFFF;
+      transform: scale(1.05);
+    }
+
+    #theme3 .copy-btn.copied {
+      background: #00FF7F;
+      color: #001529;
+      border-color: #00FF7F;
+    }
+
+    #theme3 .edit-btn {
+      background: #003A5C;
+      color: #FFFFFF;
+    }
+
+    #theme3 .edit-btn:hover {
+      background: #005580;
+    }
+
+    #theme3 .delete-btn {
+      background: #003A5C;
+      color: #FF1744;
+      border-color: #FF1744;
+    }
+
+    #theme3 .delete-btn:hover {
+      background: #FF1744;
+      color: #FFFFFF;
+      border-color: #FF1744;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 4: グリーンハイコントラスト
+       - 深緑背景 + 白テキスト + ライムグリーンアクセント
+       - ターミナル風の配色
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #theme4 {
+      background: #0D1B0D;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    #theme4 .app-header {
+      background: #050A05;
+      color: #FFFFFF;
+      padding: 32px 40px;
+      border-bottom: 5px solid #76FF03;
+    }
+
+    #theme4 .app-title {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-left: 8px solid #76FF03;
+      padding-left: 20px;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .app-subtitle {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      color: #B2FF59;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    #theme4 .search-section {
+      background: #1B2F1B;
+      border: 4px solid #76FF03;
+      border-radius: 0;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    #theme4 .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 4px solid #76FF03;
+      padding-bottom: 12px;
+      color: #76FF03;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .search-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border: 4px solid #76FF03;
+      border-radius: 0;
+      background: #0D1B0D;
+      color: #76FF03;
+      margin-bottom: 20px;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .search-input::placeholder {
+      color: #558B2F;
+      font-weight: 600;
+    }
+
+    #theme4 .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    #theme4 .tag-chip {
+      padding: 12px 20px;
+      background: #0D1B0D;
+      color: #76FF03;
+      border: 3px solid #76FF03;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .tag-chip:hover,
+    #theme4 .tag-chip.active {
+      background: #76FF03;
+      border-color: #76FF03;
+      color: #0D1B0D;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 #76FF03;
+    }
+
+    #theme4 .favorite-toggle {
+      padding: 16px 28px;
+      background: #0D1B0D;
+      color: #76FF03;
+      border: 4px solid #76FF03;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .favorite-toggle:hover,
+    #theme4 .favorite-toggle.active {
+      background: #76FF03;
+      border-color: #76FF03;
+      color: #0D1B0D;
+      transform: scale(1.05);
+    }
+
+    #theme4 .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #theme4 .prompt-item {
+      background: #1B2F1B;
+      border: 4px solid #76FF03;
+      border-radius: 0;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    #theme4 .prompt-item:hover {
+      border-color: #CCFF90;
+      box-shadow: 0 0 20px rgba(118, 255, 3, 0.4);
+      transform: translateY(-4px);
+    }
+
+    #theme4 .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    #theme4 .prompt-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      flex: 1;
+      color: #76FF03;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .favorite-badge {
+      background: #76FF03;
+      color: #0D1B0D;
+      padding: 8px 16px;
+      border: 3px solid #FFFFFF;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .prompt-description {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #B2FF59;
+      font-weight: 500;
+    }
+
+    #theme4 .prompt-content {
+      background: #0D1B0D;
+      border: 3px solid #76FF03;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      max-height: 120px;
+      overflow-y: auto;
+      color: #76FF03;
+      font-weight: 500;
+    }
+
+    #theme4 .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    #theme4 .tag {
+      background: #0D1B0D;
+      color: #76FF03;
+      padding: 6px 14px;
+      border: 3px solid #76FF03;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .prompt-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    #theme4 .action-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border: 3px solid #76FF03;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Courier New', monospace;
+    }
+
+    #theme4 .copy-btn {
+      background: #76FF03;
+      color: #0D1B0D;
+      border-color: #76FF03;
+    }
+
+    #theme4 .copy-btn:hover {
+      background: #CCFF90;
+      border-color: #CCFF90;
+      transform: scale(1.05);
+    }
+
+    #theme4 .copy-btn.copied {
+      background: #00E676;
+      color: #FFFFFF;
+      border-color: #00E676;
+    }
+
+    #theme4 .edit-btn {
+      background: #1B2F1B;
+      color: #76FF03;
+    }
+
+    #theme4 .edit-btn:hover {
+      background: #2D4A2D;
+    }
+
+    #theme4 .delete-btn {
+      background: #1B2F1B;
+      color: #FF5252;
+      border-color: #FF5252;
+    }
+
+    #theme4 .delete-btn:hover {
+      background: #FF5252;
+      color: #FFFFFF;
+      border-color: #FF5252;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       レスポンシブデザイン
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    @media (max-width: 768px) {
+      .tab-navigation {
+        flex-wrap: wrap;
+        padding: 10px 0 0 0;
+      }
+
+      .tab-button {
+        font-size: 14px;
+        padding: 12px 16px;
+      }
+
+      .theme-label {
+        font-size: 10px;
+      }
+
+      [id^="theme"] .app-title {
+        font-size: 24px;
+        letter-spacing: 2px;
+      }
+
+      [id^="theme"] .main-content {
+        padding: 20px;
+      }
+
+      [id^="theme"] .search-section {
+        padding: 20px;
+      }
+
+      [id^="theme"] .tag-filters {
+        gap: 8px;
+      }
+
+      [id^="theme"] .tag-chip {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      [id^="theme"] .prompt-item {
+        padding: 20px;
+      }
+
+      [id^="theme"] .prompt-title {
+        font-size: 18px;
+      }
+
+      [id^="theme"] .prompt-actions {
+        flex-direction: column;
+      }
+
+      [id^="theme"] .action-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       タブナビゲーション
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <nav class="tab-navigation">
+    <button class="tab-button active" onclick="switchTheme(1)">
+      <span class="theme-label">THEME 01</span>
+      クラシック
+    </button>
+    <button class="tab-button" onclick="switchTheme(2)">
+      <span class="theme-label">THEME 02</span>
+      ダーク
+    </button>
+    <button class="tab-button" onclick="switchTheme(3)">
+      <span class="theme-label">THEME 03</span>
+      ブルー
+    </button>
+    <button class="tab-button" onclick="switchTheme(4)">
+      <span class="theme-label">THEME 04</span>
+      グリーン
+    </button>
+  </nav>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 1: クラシックハイコントラスト
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div id="theme1" class="theme-container active">
+    <header class="app-header">
+      <h1 class="app-title">PromptManagement</h1>
+      <p class="app-subtitle">Your Personal Prompt Library</p>
+    </header>
+
+    <main class="main-content">
+      <!-- 検索セクション -->
+      <section class="search-section">
+        <h2 class="section-title">Search & Filter</h2>
+
+        <input
+          type="text"
+          class="search-input"
+          placeholder="SEARCH BY TITLE, DESCRIPTION, OR CONTENT..."
+        >
+
+        <div class="tag-filters">
+          <button class="tag-chip active" onclick="toggleTag(this)">AI</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Code</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Writing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Marketing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Research</button>
+        </div>
+
+        <button class="favorite-toggle" onclick="toggleFavorite(this)">
+          ★ Favorites Only
+        </button>
+      </section>
+
+      <!-- プロンプト一覧 -->
+      <section class="prompt-list">
+        <!-- プロンプト1 -->
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Code Review Assistant</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            コードレビューを効率化するための質問生成プロンプト。コードの品質、セキュリティ、パフォーマンスの観点から詳細な分析を行います。
+          </p>
+          <pre class="prompt-content">あなたは経験豊富なシニアエンジニアです。以下のコードをレビューし、以下の観点から詳細なフィードバックを提供してください:
+
+1. コード品質(可読性、保守性)
+2. セキュリティ脆弱性
+3. パフォーマンスの改善余地
+4. ベストプラクティスの遵守
+
+[ここにコードを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Code</span>
+            <span class="tag">Review</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">
+              Copy
+            </button>
+            <button class="action-btn edit-btn">
+              Edit
+            </button>
+            <button class="action-btn delete-btn">
+              Delete
+            </button>
+          </div>
+        </article>
+
+        <!-- プロンプト2 -->
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Marketing Copy Generator</h3>
+          </div>
+          <p class="prompt-description">
+            商品やサービスの魅力的なマーケティングコピーを生成します。ターゲット層を意識した説得力のある文章を作成します。
+          </p>
+          <pre class="prompt-content">あなたはプロのコピーライターです。以下の商品/サービスについて、魅力的なマーケティングコピーを作成してください。
+
+商品/サービス: [商品名]
+ターゲット層: [ターゲット顧客]
+主な特徴: [特徴1、特徴2、特徴3]
+
+以下の形式で出力してください:
+1. キャッチコピー(15文字以内)
+2. メインコピー(50文字以内)
+3. 詳細説明(150文字以内)</pre>
+          <div class="prompt-tags">
+            <span class="tag">Marketing</span>
+            <span class="tag">Writing</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">
+              Copy
+            </button>
+            <button class="action-btn edit-btn">
+              Edit
+            </button>
+            <button class="action-btn delete-btn">
+              Delete
+            </button>
+          </div>
+        </article>
+
+        <!-- プロンプト3 -->
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Research Paper Summarizer</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            学術論文や技術文書を簡潔にまとめ、重要なポイントを抽出します。研究の効率化に最適です。
+          </p>
+          <pre class="prompt-content">あなたは研究アシスタントです。以下の論文/文書を分析し、以下の形式で要約してください:
+
+【タイトル】
+【著者・発行年】
+【主要な主張】(3〜5つの箇条書き)
+【方法論】(簡潔に)
+【主な発見】(3〜5つの箇条書き)
+【結論】
+【実務への応用可能性】
+
+[ここに論文テキストを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">Research</span>
+            <span class="tag">AI</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">
+              Copy
+            </button>
+            <button class="action-btn edit-btn">
+              Edit
+            </button>
+            <button class="action-btn delete-btn">
+              Delete
+            </button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 2: ダークハイコントラスト
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div id="theme2" class="theme-container">
+    <header class="app-header">
+      <h1 class="app-title">PromptManagement</h1>
+      <p class="app-subtitle">Your Personal Prompt Library</p>
+    </header>
+
+    <main class="main-content">
+      <section class="search-section">
+        <h2 class="section-title">Search & Filter</h2>
+        <input type="text" class="search-input" placeholder="SEARCH BY TITLE, DESCRIPTION, OR CONTENT...">
+        <div class="tag-filters">
+          <button class="tag-chip active" onclick="toggleTag(this)">AI</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Code</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Writing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Marketing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Research</button>
+        </div>
+        <button class="favorite-toggle" onclick="toggleFavorite(this)">★ Favorites Only</button>
+      </section>
+
+      <section class="prompt-list">
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Code Review Assistant</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            コードレビューを効率化するための質問生成プロンプト。コードの品質、セキュリティ、パフォーマンスの観点から詳細な分析を行います。
+          </p>
+          <pre class="prompt-content">あなたは経験豊富なシニアエンジニアです。以下のコードをレビューし、以下の観点から詳細なフィードバックを提供してください:
+
+1. コード品質(可読性、保守性)
+2. セキュリティ脆弱性
+3. パフォーマンスの改善余地
+4. ベストプラクティスの遵守
+
+[ここにコードを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Code</span>
+            <span class="tag">Review</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Marketing Copy Generator</h3>
+          </div>
+          <p class="prompt-description">
+            商品やサービスの魅力的なマーケティングコピーを生成します。ターゲット層を意識した説得力のある文章を作成します。
+          </p>
+          <pre class="prompt-content">あなたはプロのコピーライターです。以下の商品/サービスについて、魅力的なマーケティングコピーを作成してください。
+
+商品/サービス: [商品名]
+ターゲット層: [ターゲット顧客]
+主な特徴: [特徴1、特徴2、特徴3]
+
+以下の形式で出力してください:
+1. キャッチコピー(15文字以内)
+2. メインコピー(50文字以内)
+3. 詳細説明(150文字以内)</pre>
+          <div class="prompt-tags">
+            <span class="tag">Marketing</span>
+            <span class="tag">Writing</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Research Paper Summarizer</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            学術論文や技術文書を簡潔にまとめ、重要なポイントを抽出します。研究の効率化に最適です。
+          </p>
+          <pre class="prompt-content">あなたは研究アシスタントです。以下の論文/文書を分析し、以下の形式で要約してください:
+
+【タイトル】
+【著者・発行年】
+【主要な主張】(3〜5つの箇条書き)
+【方法論】(簡潔に)
+【主な発見】(3〜5つの箇条書き)
+【結論】
+【実務への応用可能性】
+
+[ここに論文テキストを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">Research</span>
+            <span class="tag">AI</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 3: ブルーハイコントラスト
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div id="theme3" class="theme-container">
+    <header class="app-header">
+      <h1 class="app-title">PromptManagement</h1>
+      <p class="app-subtitle">Your Personal Prompt Library</p>
+    </header>
+
+    <main class="main-content">
+      <section class="search-section">
+        <h2 class="section-title">Search & Filter</h2>
+        <input type="text" class="search-input" placeholder="SEARCH BY TITLE, DESCRIPTION, OR CONTENT...">
+        <div class="tag-filters">
+          <button class="tag-chip active" onclick="toggleTag(this)">AI</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Code</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Writing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Marketing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Research</button>
+        </div>
+        <button class="favorite-toggle" onclick="toggleFavorite(this)">★ Favorites Only</button>
+      </section>
+
+      <section class="prompt-list">
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Code Review Assistant</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            コードレビューを効率化するための質問生成プロンプト。コードの品質、セキュリティ、パフォーマンスの観点から詳細な分析を行います。
+          </p>
+          <pre class="prompt-content">あなたは経験豊富なシニアエンジニアです。以下のコードをレビューし、以下の観点から詳細なフィードバックを提供してください:
+
+1. コード品質(可読性、保守性)
+2. セキュリティ脆弱性
+3. パフォーマンスの改善余地
+4. ベストプラクティスの遵守
+
+[ここにコードを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Code</span>
+            <span class="tag">Review</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Marketing Copy Generator</h3>
+          </div>
+          <p class="prompt-description">
+            商品やサービスの魅力的なマーケティングコピーを生成します。ターゲット層を意識した説得力のある文章を作成します。
+          </p>
+          <pre class="prompt-content">あなたはプロのコピーライターです。以下の商品/サービスについて、魅力的なマーケティングコピーを作成してください。
+
+商品/サービス: [商品名]
+ターゲット層: [ターゲット顧客]
+主な特徴: [特徴1、特徴2、特徴3]
+
+以下の形式で出力してください:
+1. キャッチコピー(15文字以内)
+2. メインコピー(50文字以内)
+3. 詳細説明(150文字以内)</pre>
+          <div class="prompt-tags">
+            <span class="tag">Marketing</span>
+            <span class="tag">Writing</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Research Paper Summarizer</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            学術論文や技術文書を簡潔にまとめ、重要なポイントを抽出します。研究の効率化に最適です。
+          </p>
+          <pre class="prompt-content">あなたは研究アシスタントです。以下の論文/文書を分析し、以下の形式で要約してください:
+
+【タイトル】
+【著者・発行年】
+【主要な主張】(3〜5つの箇条書き)
+【方法論】(簡潔に)
+【主な発見】(3〜5つの箇条書き)
+【結論】
+【実務への応用可能性】
+
+[ここに論文テキストを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">Research</span>
+            <span class="tag">AI</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       Theme 4: グリーンハイコントラスト
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div id="theme4" class="theme-container">
+    <header class="app-header">
+      <h1 class="app-title">PromptManagement</h1>
+      <p class="app-subtitle">Your Personal Prompt Library</p>
+    </header>
+
+    <main class="main-content">
+      <section class="search-section">
+        <h2 class="section-title">Search & Filter</h2>
+        <input type="text" class="search-input" placeholder="SEARCH BY TITLE, DESCRIPTION, OR CONTENT...">
+        <div class="tag-filters">
+          <button class="tag-chip active" onclick="toggleTag(this)">AI</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Code</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Writing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Marketing</button>
+          <button class="tag-chip" onclick="toggleTag(this)">Research</button>
+        </div>
+        <button class="favorite-toggle" onclick="toggleFavorite(this)">★ Favorites Only</button>
+      </section>
+
+      <section class="prompt-list">
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Code Review Assistant</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            コードレビューを効率化するための質問生成プロンプト。コードの品質、セキュリティ、パフォーマンスの観点から詳細な分析を行います。
+          </p>
+          <pre class="prompt-content">あなたは経験豊富なシニアエンジニアです。以下のコードをレビューし、以下の観点から詳細なフィードバックを提供してください:
+
+1. コード品質(可読性、保守性)
+2. セキュリティ脆弱性
+3. パフォーマンスの改善余地
+4. ベストプラクティスの遵守
+
+[ここにコードを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Code</span>
+            <span class="tag">Review</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Marketing Copy Generator</h3>
+          </div>
+          <p class="prompt-description">
+            商品やサービスの魅力的なマーケティングコピーを生成します。ターゲット層を意識した説得力のある文章を作成します。
+          </p>
+          <pre class="prompt-content">あなたはプロのコピーライターです。以下の商品/サービスについて、魅力的なマーケティングコピーを作成してください。
+
+商品/サービス: [商品名]
+ターゲット層: [ターゲット顧客]
+主な特徴: [特徴1、特徴2、特徴3]
+
+以下の形式で出力してください:
+1. キャッチコピー(15文字以内)
+2. メインコピー(50文字以内)
+3. 詳細説明(150文字以内)</pre>
+          <div class="prompt-tags">
+            <span class="tag">Marketing</span>
+            <span class="tag">Writing</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+
+        <article class="prompt-item">
+          <div class="prompt-header">
+            <h3 class="prompt-title">Research Paper Summarizer</h3>
+            <span class="favorite-badge">★ FAV</span>
+          </div>
+          <p class="prompt-description">
+            学術論文や技術文書を簡潔にまとめ、重要なポイントを抽出します。研究の効率化に最適です。
+          </p>
+          <pre class="prompt-content">あなたは研究アシスタントです。以下の論文/文書を分析し、以下の形式で要約してください:
+
+【タイトル】
+【著者・発行年】
+【主要な主張】(3〜5つの箇条書き)
+【方法論】(簡潔に)
+【主な発見】(3〜5つの箇条書き)
+【結論】
+【実務への応用可能性】
+
+[ここに論文テキストを貼り付け]</pre>
+          <div class="prompt-tags">
+            <span class="tag">Research</span>
+            <span class="tag">AI</span>
+          </div>
+          <div class="prompt-actions">
+            <button class="action-btn copy-btn" onclick="copyPrompt(this)">Copy</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       JavaScript
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <script>
+    // テーマ切り替え
+    function switchTheme(themeNumber) {
+      // 全テーマを非表示
+      document.querySelectorAll('.theme-container').forEach(container => {
+        container.classList.remove('active');
+      });
+
+      // 選択テーマを表示
+      document.getElementById(`theme${themeNumber}`).classList.add('active');
+
+      // タブボタンのアクティブ状態を更新
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+      });
+      event.target.closest('.tab-button').classList.add('active');
+    }
+
+    // タグフィルタトグル
+    function toggleTag(element) {
+      element.classList.toggle('active');
+    }
+
+    // お気に入りトグル
+    function toggleFavorite(element) {
+      element.classList.toggle('active');
+    }
+
+    // プロンプトコピー機能
+    async function copyPrompt(button) {
+      const promptItem = button.closest('.prompt-item');
+      const promptContent = promptItem.querySelector('.prompt-content').textContent;
+
+      try {
+        await navigator.clipboard.writeText(promptContent);
+
+        // ボタンの視覚的フィードバック
+        const originalText = button.textContent;
+        button.textContent = '✓ Copied!';
+        button.classList.add('copied');
+
+        // 2秒後に元に戻す
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+
+      } catch (error) {
+        alert('コピーに失敗しました。HTTPS環境でご利用ください。');
+      }
+    }
+  </script>
+
+</body>
+</html>
