@@ -1,0 +1,28 @@
+/* 1. リセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 2. ルート設定（フォントのみ） */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3. body 最小限設定 */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  /* ⚠️ display: flex 等は記載しない - MUIコンポーネントと競合 */
+}
+
+/* 4. #root も最小限 */
+#root {
+  min-height: 100vh;
+}
