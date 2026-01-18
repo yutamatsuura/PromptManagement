@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設定ページ - モックアップ</title>
+
+  <!-- Material UI Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+      font-size: 14px;
+      color: #ffffff;
+      background: #001f3f; /* theme.palette.background.default */
+    }
+  </style>
+</head>
+<body>
+  <!--
+    📌 MUI変換マッピング表
+    このHTMLモックアップは以下のMUIコンポーネントに変換されます：
+
+    - <h2> → <Typography variant="h4">
+    - <h3> → <Typography variant="h6">
+    - <p> → <Typography variant="body1">
+    - <button> → <Button variant="contained">
+    - <section> → <Paper>
+    - margin/padding: spacing()基準（8px単位）
+
+    色定義:
+    - background.default: #001f3f
+    - background.paper: #002855
+    - primary.main: #00d4ff
+    - error.main: #ff6b6b
+    - text.primary: #ffffff
+    - text.secondary: rgba(255, 255, 255, 0.7)
+  -->
+
+  <!-- コンテンツ開始（MainLayout内に配置されることを想定） -->
+  <div style="max-width: 960px; margin: 0 auto; padding: 24px;"> <!-- MUI: Container maxWidth="md" py={3} -->
+
+    <!-- ページタイトル -->
+    <div style="margin-bottom: 32px;"> <!-- MUI: Box mb={4} -->
+      <h2 style="font-size: 34px; font-weight: 400; line-height: 1.235; letter-spacing: 0.00735em;">
+        <!-- MUI: Typography variant="h4" -->
+        設定
+      </h2>
+    </div>
+
+    <!-- 統計情報セクション -->
+    <section style="
+      background: #002855; /* theme.palette.background.paper */
+      border: 3px solid white;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 24px;
+    "> <!-- MUI: Paper sx={{ p: 3, mb: 3, border: 3, borderColor: 'white' }} -->
+
+      <h3 style="
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+        letter-spacing: 0.0075em;
+        margin-bottom: 16px;
+      "> <!-- MUI: Typography variant="h6" mb={2} -->
+        統計情報
+      </h3>
+
+      <div style="display: flex; gap: 24px; flex-wrap: wrap;"> <!-- MUI: Box display="flex" gap={3} flexWrap="wrap" -->
+
+        <!-- 統計カード: 総プロンプト数 -->
+        <div style="
+          flex: 1;
+          min-width: 150px;
+          padding: 16px;
+          background: #003A5C;
+          border: 2px solid #00d4ff;
+          border-radius: 4px;
+          text-align: center;
+        "> <!-- MUI: Paper sx={{ flex: 1, minWidth: 150, p: 2, border: 2, borderColor: 'primary.main', textAlign: 'center' }} -->
+          <p style="
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+          "> <!-- MUI: Typography variant="body2" color="text.secondary" mb={1} -->
+            総プロンプト数
+          </p>
+          <p style="
+            font-size: 34px;
+            font-weight: 700;
+            color: #00d4ff;
+          "> <!-- MUI: Typography variant="h4" color="primary.main" fontWeight={700} -->
+            42
+          </p>
+        </div>
+
+        <!-- 統計カード: タグ数 -->
+        <div style="
+          flex: 1;
+          min-width: 150px;
+          padding: 16px;
+          background: #003A5C;
+          border: 2px solid #00d4ff;
+          border-radius: 4px;
+          text-align: center;
+        "> <!-- MUI: Paper sx={{ flex: 1, minWidth: 150, p: 2, border: 2, borderColor: 'primary.main', textAlign: 'center' }} -->
+          <p style="
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+          "> <!-- MUI: Typography variant="body2" color="text.secondary" mb={1} -->
+            タグ数
+          </p>
+          <p style="
+            font-size: 34px;
+            font-weight: 700;
+            color: #00d4ff;
+          "> <!-- MUI: Typography variant="h4" color="primary.main" fontWeight={700} -->
+            8
+          </p>
+        </div>
+
+        <!-- 統計カード: お気に入り数 -->
+        <div style="
+          flex: 1;
+          min-width: 150px;
+          padding: 16px;
+          background: #003A5C;
+          border: 2px solid #00d4ff;
+          border-radius: 4px;
+          text-align: center;
+        "> <!-- MUI: Paper sx={{ flex: 1, minWidth: 150, p: 2, border: 2, borderColor: 'primary.main', textAlign: 'center' }} -->
+          <p style="
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+          "> <!-- MUI: Typography variant="body2" color="text.secondary" mb={1} -->
+            お気に入り数
+          </p>
+          <p style="
+            font-size: 34px;
+            font-weight: 700;
+            color: #00d4ff;
+          "> <!-- MUI: Typography variant="h4" color="primary.main" fontWeight={700} -->
+            12
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- データ管理セクション -->
+    <section style="
+      background: #002855;
+      border: 3px solid white;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 24px;
+    "> <!-- MUI: Paper sx={{ p: 3, mb: 3, border: 3, borderColor: 'white' }} -->
+
+      <h3 style="
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+        letter-spacing: 0.0075em;
+        margin-bottom: 16px;
+      "> <!-- MUI: Typography variant="h6" mb={2} -->
+        データ管理
+      </h3>
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;"> <!-- MUI: Box display="flex" gap={2} flexWrap="wrap" -->
+
+        <!-- エクスポートボタン -->
+        <button style="
+          padding: 10px 24px;
+          background: #00d4ff;
+          color: #001f3f;
+          border: none;
+          border-radius: 4px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          text-transform: none;
+          letter-spacing: 0.5px;
+          font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+          box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+        "> <!-- MUI: Button variant="contained" color="primary" sx={{ fontWeight: 700 }} -->
+          データをエクスポート (JSON)
+        </button>
+
+        <!-- インポートボタン -->
+        <button style="
+          padding: 10px 24px;
+          background: #003A5C;
+          color: #00d4ff;
+          border: 3px solid white;
+          border-radius: 4px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          text-transform: none;
+          letter-spacing: 0.5px;
+          font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+        "> <!-- MUI: Button variant="outlined" sx={{ fontWeight: 700, borderWidth: 3 }} -->
+          データをインポート (JSON)
+        </button>
+
+      </div>
+    </section>
+
+    <!-- アカウント管理セクション -->
+    <section style="
+      background: #002855;
+      border: 3px solid white;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 24px;
+    "> <!-- MUI: Paper sx={{ p: 3, mb: 3, border: 3, borderColor: 'white' }} -->
+
+      <h3 style="
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+        letter-spacing: 0.0075em;
+        margin-bottom: 16px;
+      "> <!-- MUI: Typography variant="h6" mb={2} -->
+        アカウント管理
+      </h3>
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;"> <!-- MUI: Box display="flex" gap={2} flexWrap="wrap" -->
+
+        <!-- ログアウトボタン -->
+        <button style="
+          padding: 10px 24px;
+          background: #003A5C;
+          color: #00d4ff;
+          border: 3px solid white;
+          border-radius: 4px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          text-transform: none;
+          letter-spacing: 0.5px;
+          font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+        "> <!-- MUI: Button variant="outlined" sx={{ fontWeight: 700, borderWidth: 3 }} -->
+          ログアウト
+        </button>
+
+        <!-- アカウント削除ボタン -->
+        <button style="
+          padding: 10px 24px;
+          background: #ff6b6b;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          text-transform: none;
+          letter-spacing: 0.5px;
+          font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+          box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+        "> <!-- MUI: Button variant="contained" color="error" sx={{ fontWeight: 700 }} -->
+          アカウントを削除
+        </button>
+
+      </div>
+
+      <!-- 削除警告テキスト -->
+      <p style="
+        margin-top: 16px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.66;
+      "> <!-- MUI: Typography variant="caption" color="text.secondary" mt={2} -->
+        ※ アカウント削除は取り消せません。全てのプロンプトデータが完全に削除されます。
+      </p>
+
+    </section>
+
+  </div>
+  <!-- コンテンツ終了 -->
+
+</body>
+</html>

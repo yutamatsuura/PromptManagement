@@ -1,6 +1,6 @@
 /**
  * Header
- * AppBar + ユーザーメニュー
+ * AppBar + ナビゲーションメニュー + ユーザーメニュー
  */
 
 import { useState } from 'react';
@@ -12,20 +12,20 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  Button,
+  Box,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-interface HeaderProps {
-  onMenuClick?: () => void;
-  showMenuIcon?: boolean;
-}
-
-export function Header({ onMenuClick, showMenuIcon = false }: HeaderProps) {
+export function Header() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,30 +47,54 @@ export function Header({ onMenuClick, showMenuIcon = false }: HeaderProps) {
     navigate('/login');
   };
 
-  return (
-    <AppBar
-      position="fixed"
-      sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-      }}
-    >
-      <Toolbar>
-        {showMenuIcon && (
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={onMenuClick}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
+  const menuItems = [
+    { text: 'プロンプト一覧', icon: <HomeIcon />, path: '/' },
+    { text: '新規作成', icon: <AddIcon />, path: '/prompt/new' },
+    { text: '設定', icon: <SettingsIcon />, path: '/settings' },
+  ];
 
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+  return (
+    <AppBar position="fixed">
+      <Toolbar>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{
+            mr: 4,
+            fontWeight: 700,
+            fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif',
+          }}
+        >
           PromptManagement
         </Typography>
 
+        {/* ナビゲーションメニュー */}
+        {user && (
+          <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
+            {menuItems.map((item) => (
+              <Button
+                key={item.path}
+                startIcon={item.icon}
+                onClick={() => navigate(item.path)}
+                sx={{
+                  color: 'white',
+                  fontWeight: location.pathname === item.path ? 700 : 400,
+                  backgroundColor:
+                    location.pathname === item.path ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                  fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif',
+                }}
+              >
+                {item.text}
+              </Button>
+            ))}
+          </Box>
+        )}
+
+        {/* ユーザーメニュー */}
         {user && (
           <>
             <IconButton

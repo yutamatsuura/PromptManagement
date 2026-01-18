@@ -1,11 +1,12 @@
 /**
  * 認証コンテキスト
  * グローバル認証状態管理
+ * スライス1: 認証基盤 - Supabase Auth統合完了
  */
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { User, AuthContextType } from '../types';
-import { mockAuthService } from '../services/api/mockAuthService';
+import { authService } from '../services/auth/authService';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -17,17 +18,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 初期化：セッションから現在のユーザーを取得
+  // 初期化：Supabaseセッションから現在のユーザーを取得
   useEffect(() => {
-    const currentUser = mockAuthService.getCurrentUser();
-    setUser(currentUser);
-    setLoading(false);
+    const initializeAuth = async () => {
+      try {
+        const currentUser = await authService.getSession();
+        setUser(currentUser);
+      } catch (error) {
+        console.error('セッション取得エラー:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    // リアルタイム認証状態監視
+    const unsubscribe = authService.onAuthStateChange((user) => {
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const user = await mockAuthService.signIn(email, password);
+      const user = await authService.signIn(email, password);
       setUser(user);
     } finally {
       setLoading(false);
@@ -37,7 +57,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signUp = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const user = await mockAuthService.signUp(email, password);
+      const user = await authService.signUp(email, password);
       setUser(user);
     } finally {
       setLoading(false);
@@ -47,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signOut = async () => {
     setLoading(true);
     try {
-      await mockAuthService.signOut();
+      await authService.signOut();
       setUser(null);
     } finally {
       setLoading(false);
@@ -55,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const resetPassword = async (email: string) => {
-    await mockAuthService.resetPassword(email);
+    await authService.resetPassword(email);
   };
 
   const value: AuthContextType = {

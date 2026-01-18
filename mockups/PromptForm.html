@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロンプト作成・編集 - モックアップ</title>
+
+  <!-- Material UI Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
+  <style>
+    /*
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    📌 MUI変換マッピング表
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    このHTMLモックアップは以下のMUIコンポーネントに変換されます:
+
+    Color Palette (Theme 3: ブルーハイコントラスト):
+    - background: #001529 (theme.palette.background.default)
+    - surface: #002140 (theme.palette.background.paper)
+    - input bg: #003A5C (カスタムカラー)
+    - text: #FFFFFF (theme.palette.text.primary)
+    - text secondary: #B3E5FC (theme.palette.text.secondary)
+    - accent: #00D9FF (theme.palette.primary.main)
+    - error: #FF1744 (theme.palette.error.main)
+    - success: #00FF7F (theme.palette.success.main)
+
+    Spacing (MUI theme.spacing):
+    - spacing(1) = 8px
+    - spacing(2) = 16px
+    - spacing(3) = 24px
+    - spacing(4) = 32px
+    - spacing(5) = 40px
+
+    Components:
+    - <input type="text"> → <TextField variant="outlined" fullWidth>
+    - <textarea> → <TextField variant="outlined" fullWidth multiline>
+    - <button class="save-btn"> → <Button variant="contained" color="primary">
+    - <button class="cancel-btn"> → <Button variant="outlined">
+    - <button class="tag-input"> → Tagify component
+    - <button class="favorite-toggle"> → <Switch>
+    - <h2> → <Typography variant="h5">
+    - <label> → <InputLabel>
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      background: #001529; /* theme.palette.background.default */
+      color: #FFFFFF; /* theme.palette.text.primary */
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    📌 MUI変換マッピング
+    このセクションは MainLayout によって提供されるため、
+    Reactコンポーネントではヘッダーを含めない
+  -->
+
+  <main style="max-width: 900px; margin: 0 auto; padding: 40px;">
+    <!-- MUI: Container maxWidth="md" sx={{ py: 5 }} -->
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         ページタイトル
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <h2 style="
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px; /* spacing(4) */
+      border-bottom: 4px solid #00D9FF; /* theme.palette.primary.main */
+      padding-bottom: 16px; /* spacing(2) */
+      color: #FFFFFF;
+    "> <!-- MUI: Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase', mb: 4, borderBottom: 4, borderColor: 'primary.main', pb: 2 }} -->
+      プロンプト作成・編集
+    </h2>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         フォーム
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <form style="
+      background: #002140; /* theme.palette.background.paper */
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      padding: 32px; /* spacing(4) */
+    "> <!-- MUI: Paper component="form" sx={{ border: 4, borderColor: 'white', borderRadius: 1, p: 4 }} -->
+
+      <!-- タイトル入力 -->
+      <div style="margin-bottom: 24px;"> <!-- MUI: Box mb={3} -->
+        <label style="
+          display: block;
+          margin-bottom: 8px; /* spacing(1) */
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        "> <!-- MUI: InputLabel sx={{ mb: 1, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          タイトル <span style="color: #FF1744;">*</span> <!-- theme.palette.error.main -->
+        </label>
+        <input
+          type="text"
+          placeholder="プロンプトタイトルを入力してください（最大200文字）..."
+          maxlength="200"
+          required
+          style="
+            width: 100%;
+            padding: 16px 20px; /* spacing(2) + 追加パディング */
+            font-size: 16px;
+            font-weight: 600;
+            border: 4px solid #FFFFFF;
+            border-radius: 4px;
+            background: #003A5C;
+            color: #FFFFFF;
+            font-family: 'Roboto', sans-serif;
+          "
+        /> <!-- MUI: TextField variant="outlined" fullWidth required placeholder="..." inputProps={{ maxLength: 200 }} sx={{ '& .MuiOutlinedInput-root': { borderWidth: 4, backgroundColor: '#003A5C', color: 'white' } }} -->
+        <div style="
+          margin-top: 8px; /* spacing(1) */
+          font-size: 12px;
+          color: #B3E5FC; /* theme.palette.text.secondary */
+          text-align: right;
+        "> <!-- MUI: Typography variant="caption" color="text.secondary" align="right" sx={{ mt: 1, display: 'block' }} -->
+          0 / 200
+        </div>
+      </div>
+
+      <!-- 説明入力 -->
+      <div style="margin-bottom: 24px;"> <!-- MUI: Box mb={3} -->
+        <label style="
+          display: block;
+          margin-bottom: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        "> <!-- MUI: InputLabel sx={{ mb: 1, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          説明（任意）
+        </label>
+        <input
+          type="text"
+          placeholder="プロンプトの説明を入力してください（最大500文字）..."
+          maxlength="500"
+          style="
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 4px solid #FFFFFF;
+            border-radius: 4px;
+            background: #003A5C;
+            color: #FFFFFF;
+            font-family: 'Roboto', sans-serif;
+          "
+        /> <!-- MUI: TextField variant="outlined" fullWidth placeholder="..." inputProps={{ maxLength: 500 }} -->
+        <div style="
+          margin-top: 8px;
+          font-size: 12px;
+          color: #B3E5FC;
+          text-align: right;
+        "> <!-- MUI: Typography variant="caption" color="text.secondary" align="right" sx={{ mt: 1, display: 'block' }} -->
+          0 / 500
+        </div>
+      </div>
+
+      <!-- プロンプト本文入力 -->
+      <div style="margin-bottom: 24px;"> <!-- MUI: Box mb={3} -->
+        <label style="
+          display: block;
+          margin-bottom: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        "> <!-- MUI: InputLabel sx={{ mb: 1, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          プロンプト本文 <span style="color: #FF1744;">*</span>
+        </label>
+        <textarea
+          placeholder="プロンプト本文を入力してください（最大10000文字）..."
+          maxlength="10000"
+          required
+          rows="12"
+          style="
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 4px solid #FFFFFF;
+            border-radius: 4px;
+            background: #003A5C;
+            color: #E1F5FE;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            resize: vertical;
+          "
+        ></textarea> <!-- MUI: TextField variant="outlined" fullWidth multiline rows={12} required placeholder="..." inputProps={{ maxLength: 10000 }} sx={{ '& .MuiOutlinedInput-root': { fontFamily: 'monospace', lineHeight: 1.8 } }} -->
+        <div style="
+          margin-top: 8px;
+          font-size: 12px;
+          color: #B3E5FC;
+          text-align: right;
+        "> <!-- MUI: Typography variant="caption" color="text.secondary" align="right" sx={{ mt: 1, display: 'block' }} -->
+          0 / 10000
+        </div>
+      </div>
+
+      <!-- タグ入力 -->
+      <div style="margin-bottom: 24px;"> <!-- MUI: Box mb={3} -->
+        <label style="
+          display: block;
+          margin-bottom: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        "> <!-- MUI: InputLabel sx={{ mb: 1, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          タグ（最大10個）
+        </label>
+        <input
+          type="text"
+          placeholder="タグを入力してください...（Enterで追加）"
+          style="
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 4px solid #FFFFFF;
+            border-radius: 4px;
+            background: #003A5C;
+            color: #FFFFFF;
+            font-family: 'Roboto', sans-serif;
+          "
+        /> <!-- MUI: Tagify component wrapped with TextField styling -->
+
+        <!-- 入力済みタグの表示エリア -->
+        <div style="
+          margin-top: 12px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px; /* spacing(1) */
+        "> <!-- MUI: Box sx={{ mt: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }} -->
+          <!-- サンプルタグ（実際はJavaScriptで動的生成） -->
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+          "> <!-- MUI: Chip label="AI" size="small" onDelete={...} sx={{ borderWidth: 3, borderColor: 'primary.main', fontWeight: 900 }} -->
+            AI
+            <button style="
+              background: none;
+              border: none;
+              color: #001529;
+              cursor: pointer;
+              font-weight: 900;
+              padding: 0;
+            ">✕</button>
+          </span>
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+          "> <!-- MUI: Chip label="CODE" size="small" onDelete={...} -->
+            CODE
+            <button style="
+              background: none;
+              border: none;
+              color: #001529;
+              cursor: pointer;
+              font-weight: 900;
+              padding: 0;
+            ">✕</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- お気に入り設定 -->
+      <div style="
+        margin-bottom: 32px; /* spacing(4) */
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      "> <!-- MUI: Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }} -->
+        <label style="
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        "> <!-- MUI: InputLabel sx={{ fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          お気に入り
+        </label>
+        <button
+          type="button"
+          class="favorite-toggle"
+          onclick="toggleFavorite(this)"
+          style="
+            width: 56px;
+            height: 32px;
+            background: #003A5C;
+            border: 3px solid #FFFFFF;
+            border-radius: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+          "
+        > <!-- MUI: Switch sx={{ '& .MuiSwitch-switchBase': { ... } }} -->
+          <span style="
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #FFFFFF;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: all 0.2s;
+          "></span>
+        </button>
+      </div>
+
+      <!-- ボタンエリア -->
+      <div style="
+        display: flex;
+        gap: 16px; /* spacing(2) */
+      "> <!-- MUI: Box sx={{ display: 'flex', gap: 2 }} -->
+
+        <button
+          type="button"
+          class="cancel-btn"
+          style="
+            flex: 1;
+            padding: 16px 28px; /* spacing(2) + 追加 */
+            background: #003A5C;
+            color: #FFFFFF;
+            border: 4px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+        > <!-- MUI: Button variant="outlined" fullWidth sx={{ py: 2, px: 3.5, borderWidth: 4, fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase' }} -->
+          キャンセル
+        </button>
+
+        <button
+          type="submit"
+          class="save-btn"
+          style="
+            flex: 1;
+            padding: 16px 28px;
+            background: #00D9FF; /* theme.palette.primary.main */
+            color: #001529;
+            border: 4px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+        > <!-- MUI: Button variant="contained" color="primary" type="submit" fullWidth sx={{ py: 2, px: 3.5, borderWidth: 4, fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase' }} -->
+          保存
+        </button>
+
+      </div>
+
+    </form>
+
+  </main>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       JavaScript
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <script>
+    // お気に入りトグル
+    function toggleFavorite(button) {
+      button.classList.toggle('active');
+      const toggleCircle = button.querySelector('span');
+
+      if (button.classList.contains('active')) {
+        // ON状態
+        button.style.background = '#00D9FF';
+        button.style.borderColor = '#00D9FF';
+        toggleCircle.style.left = '29px'; // 右端に移動
+      } else {
+        // OFF状態
+        button.style.background = '#003A5C';
+        button.style.borderColor = '#FFFFFF';
+        toggleCircle.style.left = '3px'; // 左端に移動
+      }
+    }
+
+    // キャンセルボタンのホバーエフェクト
+    const cancelBtn = document.querySelector('.cancel-btn');
+    cancelBtn.addEventListener('mouseenter', () => {
+      cancelBtn.style.background = '#FFFFFF';
+      cancelBtn.style.color = '#001529';
+    });
+    cancelBtn.addEventListener('mouseleave', () => {
+      cancelBtn.style.background = '#003A5C';
+      cancelBtn.style.color = '#FFFFFF';
+    });
+
+    // 保存ボタンのホバーエフェクト
+    const saveBtn = document.querySelector('.save-btn');
+    saveBtn.addEventListener('mouseenter', () => {
+      saveBtn.style.background = '#FFFFFF';
+      saveBtn.style.borderColor = '#00D9FF';
+      saveBtn.style.color = '#00D9FF';
+    });
+    saveBtn.addEventListener('mouseleave', () => {
+      saveBtn.style.background = '#00D9FF';
+      saveBtn.style.borderColor = '#00D9FF';
+      saveBtn.style.color = '#001529';
+    });
+
+    // 文字数カウント機能（シンプルなデモ）
+    const inputs = document.querySelectorAll('input[maxlength], textarea[maxlength]');
+    inputs.forEach((input) => {
+      const counter = input.nextElementSibling;
+      if (counter && counter.textContent.includes('/')) {
+        input.addEventListener('input', () => {
+          const current = input.value.length;
+          const max = input.getAttribute('maxlength');
+          counter.textContent = `${current} / ${max}`;
+        });
+      }
+    });
+
+    // フォーム送信時のバリデーション
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title = form.querySelector('input[required]').value;
+      const content = form.querySelector('textarea[required]').value;
+
+      if (!title.trim() || !content.trim()) {
+        alert('タイトルとプロンプト本文は必須です！');
+        return;
+      }
+
+      // 成功メッセージ（実際はP-002へリダイレクト）
+      alert('プロンプトが正常に保存されました！\n（実際のアプリではP-002にリダイレクトします）');
+    });
+  </script>
+
+</body>
+</html>

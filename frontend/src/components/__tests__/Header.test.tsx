@@ -2,7 +2,7 @@
  * Header コンポーネントテスト
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../../contexts/AuthContext';
@@ -13,23 +13,21 @@ describe('Header', () => {
     render(
       <BrowserRouter>
         <AuthProvider>
-          <Header showMenuIcon={false} />
+          <Header />
         </AuthProvider>
       </BrowserRouter>
     );
     expect(screen.getByText('PromptManagement')).toBeInTheDocument();
   });
 
-  it('shows menu icon when showMenuIcon is true', () => {
-    const mockOnMenuClick = vi.fn();
+  it('renders app name', () => {
     render(
       <BrowserRouter>
         <AuthProvider>
-          <Header showMenuIcon={true} onMenuClick={mockOnMenuClick} />
+          <Header />
         </AuthProvider>
       </BrowserRouter>
     );
-    const menuButton = screen.getByLabelText('open drawer');
-    expect(menuButton).toBeInTheDocument();
+    expect(screen.getByText('PromptManagement')).toBeInTheDocument();
   });
 });

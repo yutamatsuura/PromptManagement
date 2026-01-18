@@ -8,9 +8,11 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
-import { DashboardPage } from './pages/DashboardPage';
+import PromptListPage from './pages/user/PromptListPage';
 import { PromptFormPage } from './pages/PromptFormPage';
-import { SettingsPage } from './pages/SettingsPage';
+import { SettingsPage } from './pages/user/SettingsPage';
+import ErrorBoundary from './components/ErrorBoundary';
+import GlobalNotification from './components/GlobalNotification';
 
 // 認証必須ルート
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -60,7 +62,7 @@ function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <DashboardPage />
+            <PromptListPage />
           </ProtectedRoute>
         }
       />
@@ -73,7 +75,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/prompt/:id/edit"
+        path="/prompts/edit/:id"
         element={
           <ProtectedRoute>
             <PromptFormPage />
@@ -94,14 +96,17 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <AuthProvider>
+            <AppRoutes />
+            <GlobalNotification />
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

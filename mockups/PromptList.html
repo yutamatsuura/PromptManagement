@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロンプト一覧・検索 - モックアップ</title>
+
+  <!-- Material UI Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
+  <style>
+    /*
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    📌 MUI変換マッピング表
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    このHTMLモックアップは以下のMUIコンポーネントに変換されます:
+
+    Color Palette (Theme 3: ブルーハイコントラスト):
+    - background: #001529 (theme.palette.background.default)
+    - surface: #002140 (theme.palette.background.paper)
+    - input bg: #003A5C (カスタムカラー)
+    - text: #FFFFFF (theme.palette.text.primary)
+    - text secondary: #B3E5FC (theme.palette.text.secondary)
+    - accent: #00D9FF (theme.palette.primary.main)
+    - error: #FF1744 (theme.palette.error.main)
+    - success: #00FF7F (theme.palette.success.main)
+
+    Spacing (MUI theme.spacing):
+    - spacing(1) = 8px
+    - spacing(2) = 16px
+    - spacing(3) = 24px
+    - spacing(4) = 32px
+    - spacing(5) = 40px
+
+    Components:
+    - <input type="text"> → <TextField variant="outlined" fullWidth>
+    - <button class="tag-chip"> → <Chip variant="outlined" clickable>
+    - <button class="favorite-toggle"> → <Button variant="outlined">
+    - <button class="copy-btn"> → <Button variant="contained" color="primary">
+    - <button class="edit-btn"> → <Button variant="outlined">
+    - <button class="delete-btn"> → <Button variant="outlined" color="error">
+    - <article class="prompt-item"> → <Card>
+    - <h3 class="prompt-title"> → <Typography variant="h6">
+    - <p class="prompt-description"> → <Typography variant="body2">
+    - <pre class="prompt-content"> → <Box component="pre">
+    - <span class="tag"> → <Chip size="small">
+    - <span class="favorite-badge"> → <Chip color="primary">
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      background: #001529; /* theme.palette.background.default */
+      color: #FFFFFF; /* theme.palette.text.primary */
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    📌 MUI変換マッピング
+    このセクションは MainLayout によって提供されるため、
+    Reactコンポーネントではヘッダーを含めない
+  -->
+
+  <main style="max-width: 1400px; margin: 0 auto; padding: 40px;">
+    <!-- MUI: Container maxWidth="xl" sx={{ py: 5 }} -->
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         検索・フィルタセクション
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section style="
+      background: #002140; /* theme.palette.background.paper */
+      border: 4px solid #FFFFFF;
+      border-radius: 4px;
+      padding: 32px; /* spacing(4) */
+      margin-bottom: 32px; /* spacing(4) */
+    "> <!-- MUI: Paper sx={{ border: 4, borderColor: 'white', borderRadius: 1, p: 4, mb: 4 }} -->
+
+      <h2 style="
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        border-bottom: 4px solid #00D9FF; /* theme.palette.primary.main */
+        padding-bottom: 12px;
+        color: #FFFFFF;
+      "> <!-- MUI: Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase', mb: 2.5, borderBottom: 4, borderColor: 'primary.main', pb: 1.5 }} -->
+        SEARCH & FILTER
+      </h2>
+
+      <!-- テキスト検索 -->
+      <input
+        type="text"
+        placeholder="SEARCH BY TITLE, DESCRIPTION, OR CONTENT..."
+        style="
+          width: 100%;
+          padding: 16px 20px; /* spacing(2) + 追加パディング */
+          font-size: 16px;
+          font-weight: 600;
+          border: 4px solid #FFFFFF;
+          border-radius: 4px;
+          background: #003A5C;
+          color: #FFFFFF;
+          margin-bottom: 20px;
+        "
+      /> <!-- MUI: TextField variant="outlined" fullWidth placeholder="..." sx={{ mb: 2.5, '& .MuiOutlinedInput-root': { borderWidth: 4, backgroundColor: '#003A5C', color: 'white' } }} -->
+
+      <!-- タグフィルター -->
+      <div style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+      "> <!-- MUI: Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 2.5 }} -->
+        <button class="tag-chip active" onclick="toggleTag(this)" style="
+          padding: 12px 20px;
+          background: #003A5C;
+          color: #FFFFFF;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        "> <!-- MUI: Chip label="AI" variant="outlined" clickable onClick={...} sx={{ borderWidth: 3, borderColor: 'white', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }} -->
+          AI
+        </button>
+        <button class="tag-chip" onclick="toggleTag(this)" style="
+          padding: 12px 20px;
+          background: #003A5C;
+          color: #FFFFFF;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        "> <!-- MUI: Chip label="Code" variant="outlined" clickable -->
+          Code
+        </button>
+        <button class="tag-chip" onclick="toggleTag(this)" style="
+          padding: 12px 20px;
+          background: #003A5C;
+          color: #FFFFFF;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        "> <!-- MUI: Chip label="Writing" variant="outlined" clickable -->
+          Writing
+        </button>
+        <button class="tag-chip" onclick="toggleTag(this)" style="
+          padding: 12px 20px;
+          background: #003A5C;
+          color: #FFFFFF;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        "> <!-- MUI: Chip label="Marketing" variant="outlined" clickable -->
+          Marketing
+        </button>
+        <button class="tag-chip" onclick="toggleTag(this)" style="
+          padding: 12px 20px;
+          background: #003A5C;
+          color: #FFFFFF;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        "> <!-- MUI: Chip label="Research" variant="outlined" clickable -->
+          Research
+        </button>
+      </div>
+
+      <!-- お気に入り絞り込み -->
+      <button class="favorite-toggle" onclick="toggleFavorite(this)" style="
+        padding: 16px 28px; /* spacing(2) + 追加 */
+        background: #003A5C;
+        color: #FFFFFF;
+        border: 4px solid #FFFFFF;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      "> <!-- MUI: Button variant="outlined" sx={{ borderWidth: 4, fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase', px: 3.5, py: 2 }} -->
+        ★ FAVORITES ONLY
+      </button>
+
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         プロンプト一覧
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section style="
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    "> <!-- MUI: Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }} -->
+
+      <!-- プロンプト1（お気に入り） -->
+      <article style="
+        background: #002140; /* theme.palette.background.paper */
+        border: 4px solid #FFFFFF;
+        border-radius: 4px;
+        padding: 28px; /* spacing(3.5) */
+        transition: all 0.2s;
+      "> <!-- MUI: Card sx={{ border: 4, borderColor: 'white', borderRadius: 1, p: 3.5 }} -->
+
+        <!-- ヘッダー（タイトル + お気に入りバッジ） -->
+        <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 16px; /* spacing(2) */
+          gap: 20px;
+        "> <!-- MUI: Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, gap: 2.5 }} -->
+          <h3 style="
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            flex: 1;
+            color: #FFFFFF;
+          "> <!-- MUI: Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', flex: 1 }} -->
+            CODE REVIEW ASSISTANT
+          </h3>
+          <span style="
+            background: #00D9FF; /* theme.palette.primary.main */
+            color: #001529;
+            padding: 8px 16px; /* spacing(1) spacing(2) */
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+          "> <!-- MUI: Chip label="★ FAV" color="primary" sx={{ borderWidth: 3, borderColor: 'white', fontWeight: 900, letterSpacing: 1 }} -->
+            ★ FAV
+          </span>
+        </div>
+
+        <!-- 説明 -->
+        <p style="
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 16px; /* spacing(2) */
+          color: #B3E5FC; /* theme.palette.text.secondary */
+          font-weight: 500;
+        "> <!-- MUI: Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }} -->
+          コードレビューを効率化するための質問生成プロンプト。コードの品質、セキュリティ、パフォーマンスの観点から詳細な分析を行います。
+        </p>
+
+        <!-- プロンプト本文 -->
+        <pre style="
+          background: #003A5C;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          padding: 16px; /* spacing(2) */
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          line-height: 1.8;
+          margin-bottom: 16px; /* spacing(2) */
+          max-height: 120px;
+          overflow-y: auto;
+          color: #E1F5FE;
+          font-weight: 500;
+          white-space: pre-wrap;
+        "><!-- MUI: Box component="pre" sx={{ backgroundColor: '#003A5C', border: 3, borderColor: 'white', borderRadius: 1, p: 2, fontFamily: 'monospace', fontSize: 13, lineHeight: 1.8, mb: 2, maxHeight: 120, overflowY: 'auto', color: '#E1F5FE', whiteSpace: 'pre-wrap' }} -->あなたは経験豊富なシニアエンジニアです。以下のコードをレビューし、以下の観点から詳細なフィードバックを提供してください:
+
+1. コード品質(可読性、保守性)
+2. セキュリティ脆弱性
+3. パフォーマンスの改善余地
+4. ベストプラクティスの遵守
+
+[ここにコードを貼り付け]</pre>
+
+        <!-- タグ -->
+        <div style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px; /* spacing(1) */
+          margin-bottom: 16px; /* spacing(2) */
+        "> <!-- MUI: Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }} -->
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF; /* theme.palette.primary.main */
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="AI" size="small" sx={{ borderWidth: 3, borderColor: 'primary.main', fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase' }} -->
+            AI
+          </span>
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="Code" size="small" -->
+            CODE
+          </span>
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="Review" size="small" -->
+            REVIEW
+          </span>
+        </div>
+
+        <!-- アクションボタン -->
+        <div style="
+          display: flex;
+          gap: 12px;
+        "> <!-- MUI: Box sx={{ display: 'flex', gap: 1.5 }} -->
+          <button class="copy-btn" onclick="copyPrompt(this)" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #00D9FF; /* theme.palette.primary.main */
+            color: #001529;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="contained" color="primary" fullWidth sx={{ py: 1.75, fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', borderWidth: 3 }} -->
+            COPY
+          </button>
+          <button class="edit-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FFFFFF;
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" fullWidth sx={{ py: 1.75, fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', borderWidth: 3 }} -->
+            EDIT
+          </button>
+          <button class="delete-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FF1744; /* theme.palette.error.main */
+            border: 3px solid #FF1744;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" color="error" fullWidth sx={{ py: 1.75, fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', borderWidth: 3 }} -->
+            DELETE
+          </button>
+        </div>
+
+      </article>
+
+      <!-- プロンプト2（通常） -->
+      <article style="
+        background: #002140;
+        border: 4px solid #FFFFFF;
+        border-radius: 4px;
+        padding: 28px;
+        transition: all 0.2s;
+      "> <!-- MUI: Card sx={{ border: 4, borderColor: 'white', borderRadius: 1, p: 3.5 }} -->
+
+        <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 16px;
+          gap: 20px;
+        "> <!-- MUI: Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, gap: 2.5 }} -->
+          <h3 style="
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            flex: 1;
+            color: #FFFFFF;
+          "> <!-- MUI: Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', flex: 1 }} -->
+            MARKETING COPY GENERATOR
+          </h3>
+        </div>
+
+        <p style="
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 16px;
+          color: #B3E5FC;
+          font-weight: 500;
+        "> <!-- MUI: Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }} -->
+          商品やサービスの魅力的なマーケティングコピーを生成します。ターゲット層を意識した説得力のある文章を作成します。
+        </p>
+
+        <pre style="
+          background: #003A5C;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          padding: 16px;
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          line-height: 1.8;
+          margin-bottom: 16px;
+          max-height: 120px;
+          overflow-y: auto;
+          color: #E1F5FE;
+          font-weight: 500;
+          white-space: pre-wrap;
+        "><!-- MUI: Box component="pre" sx={{ backgroundColor: '#003A5C', border: 3, borderColor: 'white', borderRadius: 1, p: 2, fontFamily: 'monospace', fontSize: 13, lineHeight: 1.8, mb: 2, maxHeight: 120, overflowY: 'auto', color: '#E1F5FE', whiteSpace: 'pre-wrap' }} -->あなたはプロのコピーライターです。以下の商品/サービスについて、魅力的なマーケティングコピーを作成してください。
+
+商品/サービス: [商品名]
+ターゲット層: [ターゲット顧客]
+主な特徴: [特徴1、特徴2、特徴3]
+
+以下の形式で出力してください:
+1. キャッチコピー(15文字以内)
+2. メインコピー(50文字以内)
+3. 詳細説明(150文字以内)</pre>
+
+        <div style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 16px;
+        "> <!-- MUI: Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }} -->
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="Marketing" size="small" -->
+            MARKETING
+          </span>
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="Writing" size="small" -->
+            WRITING
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 12px;"> <!-- MUI: Box sx={{ display: 'flex', gap: 1.5 }} -->
+          <button class="copy-btn" onclick="copyPrompt(this)" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #00D9FF;
+            color: #001529;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="contained" color="primary" fullWidth -->
+            COPY
+          </button>
+          <button class="edit-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FFFFFF;
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" fullWidth -->
+            EDIT
+          </button>
+          <button class="delete-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FF1744;
+            border: 3px solid #FF1744;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" color="error" fullWidth -->
+            DELETE
+          </button>
+        </div>
+
+      </article>
+
+      <!-- プロンプト3（お気に入り） -->
+      <article style="
+        background: #002140;
+        border: 4px solid #FFFFFF;
+        border-radius: 4px;
+        padding: 28px;
+        transition: all 0.2s;
+      "> <!-- MUI: Card sx={{ border: 4, borderColor: 'white', borderRadius: 1, p: 3.5 }} -->
+
+        <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 16px;
+          gap: 20px;
+        "> <!-- MUI: Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, gap: 2.5 }} -->
+          <h3 style="
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            flex: 1;
+            color: #FFFFFF;
+          "> <!-- MUI: Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 1, textTransform: 'uppercase', flex: 1 }} -->
+            RESEARCH PAPER SUMMARIZER
+          </h3>
+          <span style="
+            background: #00D9FF;
+            color: #001529;
+            padding: 8px 16px;
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+          "> <!-- MUI: Chip label="★ FAV" color="primary" sx={{ borderWidth: 3, borderColor: 'white', fontWeight: 900, letterSpacing: 1 }} -->
+            ★ FAV
+          </span>
+        </div>
+
+        <p style="
+          font-size: 14px;
+          line-height: 1.6;
+          margin-bottom: 16px;
+          color: #B3E5FC;
+          font-weight: 500;
+        "> <!-- MUI: Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }} -->
+          学術論文や技術文書を簡潔にまとめ、重要なポイントを抽出します。研究の効率化に最適です。
+        </p>
+
+        <pre style="
+          background: #003A5C;
+          border: 3px solid #FFFFFF;
+          border-radius: 4px;
+          padding: 16px;
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          line-height: 1.8;
+          margin-bottom: 16px;
+          max-height: 120px;
+          overflow-y: auto;
+          color: #E1F5FE;
+          font-weight: 500;
+          white-space: pre-wrap;
+        "><!-- MUI: Box component="pre" sx={{ backgroundColor: '#003A5C', border: 3, borderColor: 'white', borderRadius: 1, p: 2, fontFamily: 'monospace', fontSize: 13, lineHeight: 1.8, mb: 2, maxHeight: 120, overflowY: 'auto', color: '#E1F5FE', whiteSpace: 'pre-wrap' }} -->あなたは研究アシスタントです。以下の論文/文書を分析し、以下の形式で要約してください:
+
+【タイトル】
+【著者・発行年】
+【主要な主張】(3〜5つの箇条書き)
+【方法論】(簡潔に)
+【主な発見】(3〜5つの箇条書き)
+【結論】
+【実務への応用可能性】
+
+[ここに論文テキストを貼り付け]</pre>
+
+        <div style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 16px;
+        "> <!-- MUI: Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }} -->
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="Research" size="small" -->
+            RESEARCH
+          </span>
+          <span style="
+            background: #FFFFFF;
+            color: #001529;
+            padding: 6px 14px;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          "> <!-- MUI: Chip label="AI" size="small" -->
+            AI
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 12px;"> <!-- MUI: Box sx={{ display: 'flex', gap: 1.5 }} -->
+          <button class="copy-btn" onclick="copyPrompt(this)" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #00D9FF;
+            color: #001529;
+            border: 3px solid #00D9FF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="contained" color="primary" fullWidth -->
+            COPY
+          </button>
+          <button class="edit-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FFFFFF;
+            border: 3px solid #FFFFFF;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" fullWidth -->
+            EDIT
+          </button>
+          <button class="delete-btn" style="
+            flex: 1;
+            padding: 14px 20px;
+            background: #003A5C;
+            color: #FF1744;
+            border: 3px solid #FF1744;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+          "> <!-- MUI: Button variant="outlined" color="error" fullWidth -->
+            DELETE
+          </button>
+        </div>
+
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       JavaScript
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <script>
+    // タグフィルタトグル
+    function toggleTag(element) {
+      element.classList.toggle('active');
+
+      // アクティブ時のスタイル変更
+      if (element.classList.contains('active')) {
+        element.style.background = '#00D9FF';
+        element.style.borderColor = '#00D9FF';
+        element.style.color = '#001529';
+      } else {
+        element.style.background = '#003A5C';
+        element.style.borderColor = '#FFFFFF';
+        element.style.color = '#FFFFFF';
+      }
+    }
+
+    // お気に入りトグル
+    function toggleFavorite(element) {
+      element.classList.toggle('active');
+
+      // アクティブ時のスタイル変更
+      if (element.classList.contains('active')) {
+        element.style.background = '#00D9FF';
+        element.style.borderColor = '#00D9FF';
+        element.style.color = '#001529';
+      } else {
+        element.style.background = '#003A5C';
+        element.style.borderColor = '#FFFFFF';
+        element.style.color = '#FFFFFF';
+      }
+    }
+
+    // プロンプトコピー機能
+    async function copyPrompt(button) {
+      const promptItem = button.closest('article');
+      const promptContent = promptItem.querySelector('pre').textContent;
+
+      try {
+        await navigator.clipboard.writeText(promptContent);
+
+        // ボタンの視覚的フィードバック
+        const originalText = button.textContent;
+        button.textContent = '✓ COPIED!';
+        button.style.background = '#00FF7F'; // theme.palette.success.main
+        button.style.borderColor = '#00FF7F';
+
+        // 2秒後に元に戻す
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = '#00D9FF';
+          button.style.borderColor = '#00D9FF';
+        }, 2000);
+
+      } catch (error) {
+        alert('コピーに失敗しました。HTTPS環境でご利用ください。');
+      }
+    }
+  </script>
+
+</body>
+</html>
