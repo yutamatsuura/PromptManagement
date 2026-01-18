@@ -3,7 +3,7 @@
  * スライス3-B: プロンプト検索API統合
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { searchPrompts, getAllTags } from '@/services/api/promptSearchService';
 import { deletePrompt as deletePromptAPI, updatePrompt } from '@/services/api/promptService';
 import type { Prompt, PromptFilter } from '@/types';
@@ -15,7 +15,7 @@ export const usePromptList = () => {
   const [error, setError] = useState<Error | null>(null);
   const [allTags, setAllTags] = useState<string[]>([]);
 
-  // フィルタ状態
+  // フィルタ状態（即座反映用）
   const [filter, setFilter] = useState<PromptFilter>({
     searchQuery: '',
     tags: [],
@@ -23,6 +23,10 @@ export const usePromptList = () => {
     // 重要: 初期状態では全件表示（お気に入りフィルタなし）
     isFavorite: undefined,
   });
+
+  // 検索実行用フィルタ（デバウンス後）
+  const [debouncedFilter, setDebouncedFilter] = useState<PromptFilter>(filter);
+  const debounceTimerRef = useRef<number | null>(null);
 
   /**
    * 全タグ取得
@@ -45,14 +49,14 @@ export const usePromptList = () => {
   const fetchPrompts = useCallback(async () => {
     try {
       setLoading(true);
-      logger.debug('Fetching prompts with filter', { filter, hookName: 'usePromptList' });
+      logger.debug('Fetching prompts with filter', { filter: debouncedFilter, hookName: 'usePromptList' });
 
-      const result = await searchPrompts(filter);
+      const result = await searchPrompts(debouncedFilter);
       setPrompts(result);
 
       logger.info('Prompts fetched successfully', {
         count: result.length,
-        filter,
+        filter: debouncedFilter,
         hookName: 'usePromptList',
       });
     } catch (err) {
@@ -65,7 +69,7 @@ export const usePromptList = () => {
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [debouncedFilter]);
 
   /**
    * プロンプト削除
@@ -132,7 +136,32 @@ export const usePromptList = () => {
     fetchAllTags();
   }, [fetchAllTags]);
 
-  // フィルタ変更時に再検索
+  // フィルタ変更時にデバウンス処理
+  useEffect(() => {
+    // タイマークリア
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // searchQueryのみデバウンス（500ms）、それ以外は即座実行
+    if (filter.searchQuery !== debouncedFilter.searchQuery) {
+      debounceTimerRef.current = setTimeout(() => {
+        setDebouncedFilter(filter);
+      }, 500);
+    } else {
+      // tags, isFavorite の変更は即座実行
+      setDebouncedFilter(filter);
+    }
+
+    // クリーンアップ
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [filter, debouncedFilter.searchQuery]);
+
+  // debouncedFilter変更時に再検索
   useEffect(() => {
     fetchPrompts();
   }, [fetchPrompts]);

@@ -37,13 +37,17 @@
 
 ## テスト認証情報
 ```yaml
+本番用アカウント:
+  email: matsuura.yuta@gmail.com
+  password: ia0110299
+
 開発用アカウント:
   email: test@promptmanagement.local
   password: TestPass123!
 
 外部サービス:
-  Supabase: プロジェクト作成後に取得
-  Vercel: デプロイ時に設定
+  Supabase: https://hfhwiqpilzrjhjlbkqdi.supabase.co
+  Vercel: https://myprompt-management.vercel.app
 ```
 
 ## コーディング規約

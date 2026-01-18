@@ -19,6 +19,7 @@ import {
   DialogActions,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { PublicLayout } from '../layouts/PublicLayout';
@@ -181,8 +182,9 @@ export function LoginPage() {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
           disabled={loading}
+          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
         >
-          {tab === 0 ? 'ログイン' : '新規登録'}
+          {loading ? '処理中...' : tab === 0 ? 'ログイン' : '新規登録'}
         </Button>
 
         {tab === 0 && (
@@ -197,18 +199,6 @@ export function LoginPage() {
             </Link>
           </Box>
         )}
-
-        {/* デモアカウント情報 */}
-        <Alert severity="info" sx={{ mt: 3 }}>
-          <Typography variant="body2" gutterBottom>
-            <strong>デモアカウント</strong>
-          </Typography>
-          <Typography variant="body2">
-            メール: test@promptmanagement.local
-            <br />
-            パスワード: TestPass123!
-          </Typography>
-        </Alert>
       </Box>
 
       {/* パスワードリセットダイアログ */}

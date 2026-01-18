@@ -22,6 +22,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  CircularProgress,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MainLayout } from '@/layouts/MainLayout';
@@ -42,6 +43,7 @@ export const PromptListPage: React.FC = () => {
   } = usePromptList();
 
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const { showSuccess, showError } = useNotificationStore();
 
   /**
@@ -111,9 +113,16 @@ export const PromptListPage: React.FC = () => {
   if (loading) {
     return (
       <MainLayout>
-        <Container maxWidth="xl" sx={{ py: 5 }}>
-          <Typography>Loading...</Typography>
-        </Container>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: 'calc(100vh - 64px)',
+          }}
+        >
+          <CircularProgress />
+        </Box>
       </MainLayout>
     );
   }
@@ -125,12 +134,13 @@ export const PromptListPage: React.FC = () => {
 
         {/* 検索・フィルタセクション（折りたたみ式） */}
         <Accordion
-          defaultExpanded={false}
+          expanded={isSearchExpanded}
+          onChange={(_, expanded) => setIsSearchExpanded(expanded)}
           sx={{
             border: 3,
             borderColor: 'white',
             borderRadius: 1,
-            mb: 2,
+            mb: 4,
             '&:before': {
               display: 'none',
             },

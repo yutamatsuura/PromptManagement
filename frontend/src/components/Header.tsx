@@ -7,7 +7,6 @@ import { useState } from 'react';
 import {
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
   Menu,
   MenuItem,
@@ -56,18 +55,27 @@ export function Header() {
   return (
     <AppBar position="fixed">
       <Toolbar>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
+        <Box
+          onClick={() => navigate('/')}
           sx={{
             mr: 4,
-            fontWeight: 700,
-            fontFamily: '"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            '&:hover': {
+              opacity: 0.8,
+            },
           }}
         >
-          PromptManagement
-        </Typography>
+          <img
+            src="/logo.png"
+            alt="Prompt Management"
+            style={{
+              height: '40px',
+              width: 'auto',
+            }}
+          />
+        </Box>
 
         {/* ナビゲーションメニュー */}
         {user && (

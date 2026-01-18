@@ -4,15 +4,14 @@
  */
 
 import { type ReactNode } from 'react';
-import { Box, AppBar, Toolbar, Typography, Container, Paper } from '@mui/material';
+import { Box, AppBar, Toolbar, Container, Paper } from '@mui/material';
 
 interface PublicLayoutProps {
   children: ReactNode;
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  title?: string;
 }
 
-export function PublicLayout({ children, maxWidth = 'sm', title }: PublicLayoutProps) {
+export function PublicLayout({ children, maxWidth = 'sm' }: PublicLayoutProps) {
   return (
     <Box
       sx={{
@@ -25,9 +24,16 @@ export function PublicLayout({ children, maxWidth = 'sm', title }: PublicLayoutP
       {/* ヘッダー */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            PromptManagement
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src="/logo.png"
+              alt="Prompt Management"
+              style={{
+                height: '40px',
+                width: 'auto',
+              }}
+            />
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -49,16 +55,6 @@ export function PublicLayout({ children, maxWidth = 'sm', title }: PublicLayoutP
               borderRadius: 2,
             }}
           >
-            {title && (
-              <Typography
-                variant="h4"
-                component="h1"
-                gutterBottom
-                sx={{ mb: 3, textAlign: 'center' }}
-              >
-                {title}
-              </Typography>
-            )}
             {children}
           </Paper>
         </Container>

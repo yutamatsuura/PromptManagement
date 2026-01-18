@@ -221,6 +221,23 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <MainLayout>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: 'calc(100vh - 64px)',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
       <Container maxWidth="md" sx={{ py: 3 }}>
@@ -235,12 +252,7 @@ export const SettingsPage: React.FC = () => {
             統計情報
           </Typography>
 
-          {loading ? (
-            <Box display="flex" justifyContent="center" py={4}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Box display="flex" gap={3} flexWrap="wrap">
+          <Box display="flex" gap={3} flexWrap="wrap">
             {/* 総プロンプト数 */}
             <Paper
               sx={{
@@ -312,8 +324,7 @@ export const SettingsPage: React.FC = () => {
                 {statistics.favorite_count}
               </Typography>
             </Paper>
-            </Box>
-          )}
+          </Box>
         </Paper>
 
         {/* データ管理セクション */}

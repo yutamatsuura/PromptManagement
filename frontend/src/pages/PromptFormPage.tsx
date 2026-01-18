@@ -17,6 +17,7 @@ import {
   InputLabel,
   Paper,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import { MainLayout } from '@/layouts/MainLayout';
 import {
@@ -24,6 +25,7 @@ import {
   getPromptById,
   updatePrompt,
 } from '@/services/api/promptService';
+import { getAllTags } from '@/services/api/promptSearchService';
 import type { PromptInput } from '@/types';
 import { logger } from '@/lib/logger';
 
@@ -43,12 +45,23 @@ export function PromptFormPage() {
   // タグ入力用
   const [tagInput, setTagInput] = useState('');
 
+  // 既存タグ一覧
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+
   // エラー・成功メッセージ
   const [error, setError] = useState<string | null>(null);
+
+  // ローディング状態
+  const [loading, setLoading] = useState(false);
 
   // 文字数カウント
   const titleLength = formData.title.length;
   const contentLength = formData.content.length;
+
+  // 初回マウント時: 既存タグ読み込み
+  useEffect(() => {
+    loadAvailableTags();
+  }, []);
 
   // 編集モード時のデータ読み込み
   useEffect(() => {
@@ -58,11 +71,26 @@ export function PromptFormPage() {
   }, [id, isEditMode]);
 
   /**
+   * 既存タグ一覧読み込み
+   */
+  const loadAvailableTags = async () => {
+    try {
+      const tags = await getAllTags();
+      setAvailableTags(tags);
+      logger.info('Available tags loaded', { count: tags.length });
+    } catch (err) {
+      logger.error('Failed to load available tags', { error: err });
+      // エラーでもフォームは使えるので、エラー表示はしない
+    }
+  };
+
+  /**
    * プロンプトデータ読み込み
    * スライス3-A: GET /api/prompts/:id
    */
   const loadPromptData = async (promptId: string) => {
     try {
+      setLoading(true);
       logger.debug('Loading prompt data', { id: promptId });
       const prompt = await getPromptById(promptId);
 
@@ -78,6 +106,8 @@ export function PromptFormPage() {
       const errorMessage = err instanceof Error ? err.message : 'データの読み込みに失敗しました';
       setError(errorMessage);
       logger.error('Failed to load prompt data', { error: errorMessage, id: promptId });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -167,6 +197,44 @@ export function PromptFormPage() {
     });
     logger.debug('Tag deleted', { tag: tagToDelete });
   };
+
+  /**
+   * 既存タグから追加
+   */
+  const handleExistingTagClick = (tag: string) => {
+    if (formData.tags.length >= 10) {
+      setError('タグは最大10個までです');
+      return;
+    }
+    if (formData.tags.includes(tag)) {
+      setError('このタグは既に追加されています');
+      return;
+    }
+
+    setFormData({
+      ...formData,
+      tags: [...formData.tags, tag],
+    });
+    setError(null);
+    logger.debug('Existing tag added', { tag });
+  };
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: 'calc(100vh - 64px)',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -318,7 +386,7 @@ export function PromptFormPage() {
               }}
             />
 
-            {/* タグ表示エリア */}
+            {/* 選択済みタグ表示エリア */}
             {formData.tags.length > 0 && (
               <Box sx={{ mt: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {formData.tags.map((tag) => (
@@ -336,6 +404,50 @@ export function PromptFormPage() {
                     }}
                   />
                 ))}
+              </Box>
+            )}
+
+            {/* よく使うタグ（既存タグから選択） */}
+            {availableTags.length > 0 && (
+              <Box sx={{ mt: 2 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'text.secondary',
+                    fontWeight: 600,
+                    letterSpacing: 0.5,
+                    mb: 1,
+                    display: 'block',
+                  }}
+                >
+                  よく使うタグから選択:
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {availableTags
+                    .filter((tag) => !formData.tags.includes(tag))
+                    .map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        variant="outlined"
+                        clickable
+                        onClick={() => handleExistingTagClick(tag)}
+                        sx={{
+                          borderWidth: 2,
+                          borderColor: 'white',
+                          backgroundColor: '#003A5C',
+                          color: 'white',
+                          fontWeight: 600,
+                          letterSpacing: 0.5,
+                          '&:hover': {
+                            backgroundColor: '#004A6C',
+                            borderColor: 'primary.main',
+                          },
+                        }}
+                      />
+                    ))}
+                </Box>
               </Box>
             )}
           </Box>
