@@ -283,7 +283,7 @@ test('E2E-LOGIN-003: 新規登録フロー', async ({ page }) => {
 
       console.log('[TEST INFO] 確認メッセージが表示されました');
       await expect(successMessage).toBeVisible();
-    } catch (error) {
+    } catch {
       // 確認メッセージが表示されない場合、ダッシュボードへのリダイレクトを確認
       console.log('[TEST INFO] 確認メッセージが表示されない、ダッシュボードへのリダイレクトを確認');
 
@@ -370,7 +370,7 @@ test('E2E-LOGIN-004: パスワードリセットフロー', async ({ page }) => 
     try {
       await page.waitForURL(/\/reset|\/forgot-password/i, { timeout: 5000 });
       console.log('[TEST INFO] パスワードリセットページへ遷移しました');
-    } catch (error) {
+    } catch {
       // パターン2: ダイアログやモーダルが表示される場合
       console.log('[TEST INFO] URLは変更されない、ダイアログ/モーダル表示を確認');
     }

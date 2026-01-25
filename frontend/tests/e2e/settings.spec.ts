@@ -594,7 +594,7 @@ test('E2E-SET-004: エクスポートデータ形式確認', async ({ page }) =>
     console.log('[DEBUG] 統計情報の読み込み完了');
   });
 
-  let exportedData: any;
+  let exportedData: { version: string; exported_at: string; prompts: unknown[] };
 
   await test.step('エクスポートボタンクリック → JSONファイルダウンロード', async () => {
     // ダウンロードイベントを待機
@@ -832,6 +832,7 @@ test('E2E-SET-005: データインポートフロー', async ({ page }) => {
   });
 
   let totalPromptsBeforeImport = 0;
+  let testFilePath = '';
 
   await test.step('インポート前の統計値を取得', async () => {
     // 統計情報セクション内の総プロンプト数を取得
@@ -877,12 +878,9 @@ test('E2E-SET-005: データインポートフロー', async ({ page }) => {
 
     // 一時ファイルに書き込み
     const tmpDir = os.tmpdir();
-    const testFilePath = path.join(tmpDir, 'test-import-prompts.json');
+    testFilePath = path.join(tmpDir, 'test-import-prompts.json');
     fs.writeFileSync(testFilePath, JSON.stringify(testData, null, 2));
     console.log(`[DEBUG] テストファイル作成: ${testFilePath}`);
-
-    // テストコンテキストに保存（後続ステップで使用）
-    (page as any).testFilePath = testFilePath;
   });
 
   await test.step('インポートボタンクリック → ファイル選択 → インポート実行', async () => {
@@ -901,7 +899,6 @@ test('E2E-SET-005: データインポートフロー', async ({ page }) => {
     console.log('[DEBUG] ファイル選択ダイアログが表示された');
 
     // テストファイルを選択
-    const testFilePath = (page as any).testFilePath;
     await fileChooser.setFiles(testFilePath);
     console.log(`[DEBUG] ファイル選択: ${testFilePath}`);
 

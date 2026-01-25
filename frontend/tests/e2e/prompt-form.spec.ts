@@ -402,10 +402,8 @@ test('E2E-FORM-003: 編集ページアクセス・データ表示', async ({ pag
   });
 
   let originalTitle = '';
-  let originalDescription = '';
   let originalContent = '';
   let originalTags: string[] = [];
-  let originalIsFavorite = false;
   let editUrl = '';
 
   await test.step('一覧ページで最初のプロンプトの編集ボタンをクリック', async () => {
